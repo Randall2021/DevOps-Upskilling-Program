@@ -1,0 +1,47 @@
+#!/bin/bash
+
+count_lines() {
+    local owner="$1"
+    local month="$2"
+
+    local count=0
+
+    if [[ -n "$owner" ]]; then
+        count=$(find . -maxdepth 1 -type f -user "$owner" -name "*.txt" -exec cat {} + | wc -l)
+    elif [[ -n "$month" ]]; then
+        count=$(find . -maxdepth 1 -type f -newermt "01-$month-$(date +%Y)" ! -newermt "01-$((month+1))-$(date +%Y)" -name "*.txt" -exec cat {} + | wc -l)
+    else
+        count=$(find . -maxdepth 1 -type f -name "*.txt" -exec cat {} + | wc -l)
+    fi
+
+    echo "Total lines: $count"
+}
+
+
+show_help() {
+    echo "Usage: ./countlines.sh [options]"
+    echo "Options:"
+    echo "  -o <owner>   Count lines in files owned by <owner>"
+    echo "  -m <month>   Count lines in files created in <month>"
+    echo "  -h           Display this help message"
+}
+
+
+while getopts ":o:m:h" option; do
+    case $option in
+        o) owner="$OPTARG";;
+        m) month="$OPTARG";;
+        h) show_help; exit;;
+        \?) echo "Invalid option: -$OPTARG"; show_help; exit 1;;
+    esac
+done
+
+
+shift $((OPTIND - 1))
+if [[ $# -gt 0 ]]; then
+    echo "Invalid argument: $1"
+    show_help
+    exit 1
+fi
+
+count_lines "$owner" "$month"
