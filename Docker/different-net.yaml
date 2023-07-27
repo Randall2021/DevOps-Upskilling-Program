@@ -1,0 +1,29 @@
+version: "3.8"  
+
+services:
+  web:
+    build:
+      context: ./web_files  
+    ports:
+      - "8080:80"  
+    networks:
+      - test_network  
+
+   db:
+    image: mysql:latest  
+    environment:
+      MYSQL_ROOT_PASSWORD: abkjhfreiu7%w2#$
+      MYSQL_DATABASE: website 
+      MYSQL_USER: test
+      MYSQL_PASSWORD: abkjhfreiu7%w2#$
+    volumes:
+      - db_data:/var/lib/mysql 
+    networks:
+      - db_network  
+
+networks:
+  test_network:  10.200.0.0/24
+  db_network:  10.100.0.0/24
+
+volumes:
+  db_data:  tes
