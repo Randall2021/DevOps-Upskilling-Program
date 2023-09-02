@@ -17,3 +17,5 @@ resource "aws_s3_bucket" "encrypted_flow_logs" {
     }
   }
 }
+#Copy Existing Flow Logs
+aws s3 cp s3://rzuniga-test s3://rzuniga-test1 --recursive
