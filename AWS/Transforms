@@ -1,0 +1,19 @@
+#Create a New S3 Bucket for Encrypted Logs
+resource "aws_s3_bucket" "encrypted_flow_logs" {
+  bucket = "rzuniga-flow-logs-bucket"
+  acl    = "private" #ACL
+  tags = {
+    Name = "Rzuniga Encrypted Flow Logs Bucket"
+  }
+}
+#Enable S3 Server-Side Encryption:
+resource "aws_s3_bucket" "encrypted_flow_logs" {
+  # ... (previous configuration)
+  server_side_encryption_configuration {
+    rule {
+      apply_server_side_encryption_by_default {
+        sse_algorithm = "AES256"  # Use AES256 encryption
+      }
+    }
+  }
+}
